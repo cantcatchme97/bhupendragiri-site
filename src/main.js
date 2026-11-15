@@ -114,36 +114,9 @@ if (heroHD && !conn.saveData && !/(^|-)2g/.test(conn.effectiveType || '')) {
   const ready = () => { const b = lite.buffered; if (b.length && b.end(b.length - 1) >= (lite.duration || 12) - 0.2) startHD(); };
   ['progress', 'timeupdate', 'canplaythrough'].forEach(e => lite.addEventListener(e, ready));
 }
-document.body.classList.add('is-loading');
-lenis && lenis.stop();
-
-const waitVideo = (v) => new Promise(res => {
-  if (v.readyState >= 3) return res();
-  // start as soon as the first frames can play, not when the whole film is downloaded
-  v.addEventListener('canplay', res, { once: true });
-  v.addEventListener('error', res, { once: true });
-  setTimeout(res, 4000);
-});
-const waitImg = (src) => new Promise(res => { const im = new Image(); im.onload = im.onerror = res; im.src = src; setTimeout(res, 3000); });
-// the page opens on the film's first frame (a small still); the film itself takes over as soon as it can play
-let loaded = 0; const tasks = [document.fonts.ready, waitImg(small() ? 'media/films/hero-m-v3.webp' : 'media/films/hero-v3.webp')];
-tasks.forEach(p => p.then(() => { loaded++; }));
-const counter = { v: 0 }; const countEl = $('#loaderCount'), barEl = $('#loaderBar');
-const showCount = () => { countEl.textContent = `${Math.round(counter.v)}%`; barEl.style.transform = `scaleX(${counter.v / 100})`; };
-const tick = gsap.ticker.add(() => {
-  const goal = Math.min(99, (loaded / tasks.length) * 100);
-  counter.v += (goal - counter.v) * 0.25 + 0.5; if (counter.v > goal) counter.v = goal;
-  showCount();
-});
-Promise.all(tasks).then(() => {
-  gsap.ticker.remove(tick);
-  gsap.to(counter, { v: 100, duration: 0.15, ease: 'power2.out', onUpdate: showCount });
-  playHero();
-  const tl = gsap.timeline({ delay: 0.05, onComplete: () => { $('#loader').remove(); document.body.classList.remove('is-loading'); lenis && lenis.start(); ScrollTrigger.refresh(); } });
-  tl.to('#loader', { clipPath: 'inset(0 0 100% 0)', duration: 0.7, ease: 'power4.inOut' })
-    .from('.opening__name', { y: 40, opacity: 0, duration: 1, ease: 'power3.out' }, '-=0.5')
-    .from('.opening__line, .opening__title .btn', { y: 22, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.06 }, '-=0.85');
-});
+// no loader: the first frame is on screen at once, the film takes over as soon as it can play
+playHero();
+if (!reduce) gsap.from('.opening__name, .opening__line, .opening__title .btn', { y: 18, duration: 0.9, ease: 'power3.out', stagger: 0.05 });
 
 /* ---------- opening: the film sinks into the page ---------- */
 const mm = gsap.matchMedia();
@@ -201,7 +174,7 @@ const setsST = ScrollTrigger.create({
 const snapInside = (st, n) => {
   let timer = 0;
   const settle = () => {
-    if (!st.isActive || document.body.classList.contains('is-loading')) return;
+    if (!st.isActive) return;
     const span = st.end - st.start, p = (scrollY - st.start) / span;
     if (p <= 0.01 || p >= 0.99) return;
     const i = Math.min(n - 1, Math.floor(p * n)), goal = st.start + span * ((i + 0.5) / n);
@@ -273,7 +246,7 @@ function openShoot(slug) {
   const ch = CHAPTERS.find(c => c.id === sh.chapter);
   $('#vNo').textContent = ch ? `${ch.no} · ${ch.name}` : 'IV · Off the clock';
   $('#vTitle').textContent = sh.title; $('#vLine').textContent = sh.line;
-  strip.innerHTML = Array.from({ length: sh.n }, (_, k) => `<figure class="viewer__frame"><img src="${shot(sh.slug, k + 1)}" alt="${sh.title}, frame ${k + 1} of ${sh.n}" ${k > 1 ? 'loading="lazy"' : ''} decoding="async"><a class="viewer__want" data-source="frame:${sh.slug}:${k + 1}" href="${wa(`Hi Bhupendra, I loved frame ${k + 1} from ${sh.title}. Can we plan something in this mood?`)}" target="_blank" rel="noopener">Want this look?</a></figure>`).join('');
+  strip.innerHTML = Array.from({ length: sh.n }, (_, k) => `<figure class="viewer__frame"><img src="${shot(sh.slug, k + 1)}" alt="${sh.title}, frame ${k + 1} of ${sh.n}" width="1280" height="1600" decoding="async" ${k > 2 ? 'fetchpriority="low"' : ''}><a class="viewer__want" data-source="frame:${sh.slug}:${k + 1}" href="${wa(`Hi Bhupendra, I loved frame ${k + 1} from ${sh.title}. Can we plan something in this mood?`)}" target="_blank" rel="noopener">Want this look?</a></figure>`).join('');
   viewer.hidden = false; document.documentElement.classList.add('has-viewer');
   lenis && lenis.stop();
   strip.scrollLeft = 0; strip.scrollTop = 0; setCount();
@@ -326,18 +299,25 @@ const track = $('#roadsTrack');
 track.innerHTML = roads.flatMap(s => Array.from({ length: s.n }, (_, k) => `<button type="button" class="roads__item" data-slug="${s.slug}"><img data-src="${shot(s.slug, k + 1, 800)}" alt="${s.title}, frame ${k + 1}"><span>${s.title}</span></button>`)).join('');
 ScrollTrigger.create({ trigger: '#roads', start: 'top 160%', once: true, onEnter: () => track.querySelectorAll('img[data-src]').forEach(im => { im.src = im.dataset.src; }) });
 track.addEventListener('click', (e) => { const b = e.target.closest('.roads__item'); if (b) openShoot(b.dataset.slug); });
-mm.add({ motion: '(prefers-reduced-motion: no-preference) and (min-width: 761px)' }, () => {
-  // pinned, so the strip moves at reading speed: about one screen of scroll per two photos
-  const dist = () => track.scrollWidth - innerWidth + innerWidth * 0.1;
-  gsap.fromTo(track, { x: () => innerWidth * 0.05 }, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: '#roads', start: 'top top', end: () => '+=' + dist() * 1.4, pin: true, scrub: 0.8, invalidateOnRefresh: true, anticipatePin: 1 } });
-});
+// no pinning: the strip drifts on its own while it's on screen, pauses under the finger or mouse,
+// and can be swiped or dragged; the page keeps scrolling past it as normal
+if (!reduce) {
+  let onScreen = false, held = false, pos = 0;
+  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) pos = track.scrollLeft; }, { threshold: 0.2 }).observe(track);
+  ['pointerenter', 'touchstart', 'focusin'].forEach(ev => track.addEventListener(ev, () => { held = true; }, { passive: true }));
+  ['pointerleave', 'touchend', 'focusout'].forEach(ev => track.addEventListener(ev, () => { held = false; pos = track.scrollLeft; }, { passive: true }));
+  gsap.ticker.add((t, dt) => {
+    if (!onScreen || held || viewer && !viewer.hidden) return;
+    const max = track.scrollWidth - track.clientWidth; if (max <= 0) return;
+    pos += dt * 0.045; if (pos >= max) pos = 0;
+    track.scrollLeft = pos;
+  });
+}
 
-
-/* ---------- contact sheet: twelve BTS frames, a grease-pencil circle, each frame plays ---------- */
+/* ---------- contact sheet: nine BTS frames, a grease-pencil circle, each frame plays ---------- */
 const film = $('#sheetFilm');
-const FR = 12, marked = [2, 9];
-film.innerHTML = Array.from({ length: FR }, (_, k) => {
-  const n = String(k + 1).padStart(2, '0');
+const PICK = ['01', '03', '04', '05', '06', '07', '08', '11', '12'], marked = [4, 8];
+film.innerHTML = PICK.map((n, k) => {
   return `<button type="button" class="sheet__frame${marked.includes(k + 1) ? ' is-marked' : ''}" data-n="${n}" aria-label="Play behind the scenes clip ${k + 1}">
     <img data-src="media/bts/${n}.jpg" alt="">
     <span class="sheet__no">${k + 1}<i>${k + 1}A</i></span>

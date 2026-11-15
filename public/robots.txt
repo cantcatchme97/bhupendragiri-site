@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /desk-r7k2pq/
+Disallow: /api/
+Sitemap: https://bhupendragiri.pages.dev/sitemap.xml

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bhupendra Giri Productions | Fashion &amp; Bridal Photographer</title>
+<meta name="description" content="Fashion, bridal couture and editorial photography by Bhupendra Giri. Shoots in Delhi, Mumbai, Bengaluru, Punjab and worldwide.">
+<meta name="theme-color" content="#120E0C">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bhupendra Giri Productions">
+<meta property="og:title" content="Bhupendra Giri Productions · Fashion and bridal photography">
+<meta property="og:description" content="Fashion, bridal and editorial photography, shot worldwide.">
+<meta property="og:image" content="https://bhupendragiri.pages.dev/media/og.jpg">
+<meta property="og:url" content="https://bhupendragiri.pages.dev/">
+<link rel="canonical" href="https://bhupendragiri.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/Cormorant-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/media/films/hero-m-v3.webp" as="image" media="(max-width: 760px)" fetchpriority="high">
+<link rel="preload" href="/media/films/hero-v3.webp" as="image" media="(min-width: 761px)" fetchpriority="high">
+<link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <p class="loader__logo" id="loaderLogo">Bhupendra <em>Giri</em></p>
+  <div class="loader__foot">
+    <div class="loader__bar"><span id="loaderBar"></span></div>
+    <div class="loader__row"><span>Setting the light</span><span class="loader__count" id="loaderCount">0%</span></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <a class="nav__mark" href="#top" aria-label="Bhupendra Giri Productions, back to the top">BG</a>
+  <nav class="nav__links" aria-label="Main">
+    <a href="#work">Work</a>
+    <a href="#bts">Behind the scenes</a>
+    <a href="#roads">Off the clock</a>
+  </nav>
+  <a class="nav__cta" href="#frame">Let's shoot</a>
+</header>
+
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Say hi to Bhupendra Giri on WhatsApp"><i></i><span>Say hi</span></a>
+
+<main id="top">
+
+  <!-- Opening: behind-the-scenes film, full screen, then sinks into the page -->
+  <section class="opening" id="opening" aria-labelledby="h1">
+    <div class="opening__stage">
+      <div class="opening__frame" id="openFrame">
+        <video class="opening__video" id="heroVideo" muted autoplay loop playsinline webkit-playsinline disablepictureinpicture disableremoteplayback preload="auto"></video>
+        <div class="opening__scrim"></div>
+        <div class="opening__title">
+          <h1 id="h1" class="opening__name">Bhupendra Giri</h1>
+          <p class="opening__line">Fashion, bridal and editorial photography, <span class="nb">shot worldwide.</span></p>
+          <a class="btn btn--light" href="#work">See the shoots</a>
+        </div>
+      </div>
+      <p class="opening__statement" id="openStatement">Brides who still look like themselves, <span class="nb">and couture that moves.</span></p>
+    </div>
+  </section>
+
+  <!-- The sets: two frames side by side, the name across the seam -->
+  <section class="sets" id="sets" aria-labelledby="setsTitle">
+    <div class="sets__stage">
+      <h2 class="sr" id="setsTitle">Selected sets</h2>
+      <div class="sets__pair" id="setsPair"></div>
+      <div class="sets__seam"><p class="sets__name" id="setName">White Symphony</p><p class="sets__line" id="setLine">Ivory bridal couture in the river mist</p></div>
+      <ol class="sets__list" id="setList" aria-label="Sets"></ol>
+      <div class="steps sets__steps" id="setSteps" aria-hidden="true"></div>
+    </div>
+  </section>
+
+
+
+  <!-- Every shoot, by chapter: open one to see the whole story -->
+  <section class="shoots" id="work" aria-labelledby="shootsTitle">
+    <header class="shoots__head">
+            <h2 class="shoots__title" id="shootsTitle">Sixteen shoots, <span class="nb">every frame</span></h2>
+    </header>
+    <div class="shoots__chapters" id="chapters"></div>
+    <figure class="shoots__peek" id="peek" aria-hidden="true"><img alt=""></figure>
+  </section>
+
+
+  <!-- Behind the frame: a contact sheet, every frame plays -->
+  <section class="sheet" id="bts" aria-labelledby="btsTitle">
+    <div class="sheet__head">
+      <p class="shoots__kicker">Contact sheet</p>
+      <h2 class="sheet__title" id="btsTitle">Behind <span class="nb">the scenes</span></h2>
+      <p class="sheet__text">Mostly reflectors, and someone holding the dupatta <span class="nb">out of shot.</span></p>
+    </div>
+    <div class="sheet__film" id="sheetFilm"></div>
+  </section>
+
+  <!-- Off the clock: travel work -->
+  <section class="roads" id="roads" aria-labelledby="roadsTitle">
+    <div class="roads__head">
+      <p class="shoots__kicker">IV</p>
+      <h2 class="roads__title" id="roadsTitle">Off <span class="nb">the clock.</span></h2>
+      <p class="roads__text">Kutch, Rajasthan <span class="nb">and Amritsar.</span></p>
+    </div>
+    <div class="roads__track" id="roadsTrack"></div>
+  </section>
+
+  <!-- Frame your shoot: a camera screen that writes the WhatsApp message -->
+  <section class="frame" id="frame" aria-labelledby="frameTitle">
+    <div class="frame__head">
+      <h2 class="frame__title" id="frameTitle">Got <span class="nb">a vision?</span></h2>
+      <p class="frame__text">Four quick picks, <span class="nb">then a chat</span> <span class="nb">with Giri.</span></p>
+    </div>
+    <div class="cam" id="cam">
+      <div class="cam__body">
+        <div class="cam__screen" id="camScreen">
+          <div class="cam__top"><span class="cam__rec"><i></i>AF <b id="camShots">36</b></span><span class="cam__loc" id="camLoc">WORLDWIDE</span><span class="cam__bat" aria-hidden="true"><i></i></span></div>
+          <span class="cam__corner cam__corner--tl"></span><span class="cam__corner cam__corner--tr"></span><span class="cam__corner cam__corner--bl"></span><span class="cam__corner cam__corner--br"></span>
+          <img class="cam__live" id="camLive" alt="" aria-hidden="true">
+          <form class="cam__steps" id="camForm" novalidate>
+            <fieldset class="cam__step is-on" data-step="1">
+              <legend>What's the shoot?</legend>
+              <div class="cam__chips" id="kindChips">
+                <button type="button" data-v="bridal couture">Bridal couture</button>
+                <button type="button" data-v="fashion campaign">Fashion campaign</button>
+                <button type="button" data-v="lookbook">Lookbook</button>
+                <button type="button" data-v="menswear">Menswear</button>
+                <button type="button" data-v="portrait">Portraits</button>
+                <button type="button" data-v="photo">Something else</button>
+              </div>
+            </fieldset>
+            <fieldset class="cam__step" data-step="2">
+              <legend>Which mood is closest?</legend>
+              <div class="cam__moods" id="moodPick"></div>
+            </fieldset>
+            <fieldset class="cam__step" data-step="3">
+              <legend>Where?</legend>
+              <div class="cam__cities" id="cityPick" role="list"></div>
+            </fieldset>
+            <fieldset class="cam__step" data-step="4">
+              <legend>Almost there</legend>
+              <div class="cam__fields">
+                <label>Your name<input name="name" type="text" autocomplete="name" placeholder="Name"></label>
+                <label>Brand or occasion<input name="brand" type="text" placeholder="Optional"></label>
+              </div>
+              <p class="cam__label">When?</p>
+              <div class="cam__chips cam__chips--sm" id="whenChips"></div>
+            </fieldset>
+          </form>
+          <div class="cam__bottom"><span>f/2.8</span><span>1/250</span><span>ISO 200</span><span>WB 5600K</span><span class="cam__step-dots" id="camDots"><i class="is-on"></i><i></i><i></i><i></i></span></div>
+          <div class="cam__flash" id="camFlash"></div>
+        </div>
+        <div class="cam__controls">
+          <button type="button" class="cam__back" id="camBack" aria-label="Previous step">Back</button>
+          <button type="button" class="cam__shutter" id="camShutter"><span class="cam__shutter-ring"></span><span class="cam__shutter-label" id="camShutterLabel">Next</span></button>
+          <p class="cam__hint" id="camHint"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__strip">
+    <span class="foot__rec"><i></i>Bhupendra Giri Productions</span>
+    <span>30.90° N, 75.85° E · Ludhiana</span>
+  </div>
+  <div class="foot__row">
+    <div class="foot__links">
+      <a href="https://www.instagram.com/bhupendra_giri_productions_/" target="_blank" rel="noopener">Instagram</a>
+      <a href="#" id="waFoot" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="tel:+917045113637">+91 70451 13637</a>
+    </div>
+    <p class="foot__small">© 2026 · <a class="foot__credit" href="https://www.instagram.com/kal.builds/" target="_blank" rel="noopener">Website by Kal Builds</a></p>
+  </div>
+</footer>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden>
+  <div class="viewer__bar">
+    <p class="viewer__meta"><span class="viewer__no" id="vNo"></span><span id="vTitle" class="viewer__title"></span><span class="viewer__line" id="vLine"></span></p>
+    <p class="viewer__count" id="vCount"></p>
+    <button class="viewer__close" id="vClose" type="button" aria-label="Close">Close</button>
+  </div>
+  <div class="viewer__strip" id="vStrip" tabindex="0"></div>
+  <div class="viewer__foot">
+    <button type="button" class="viewer__nav" id="vPrev" aria-label="Previous frame">&larr;</button>
+    <button type="button" class="viewer__nav" id="vNext" aria-label="Next frame">&rarr;</button>
+  </div>
+</div>
+<div class="screen" id="screen" aria-hidden="true"></div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

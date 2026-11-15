@@ -130,7 +130,6 @@ let loaded = 0; const tasks = [document.fonts.ready, waitImg(small() ? 'media/fi
 tasks.forEach(p => p.then(() => { loaded++; }));
 const counter = { v: 0 }; const countEl = $('#loaderCount'), barEl = $('#loaderBar');
 const showCount = () => { countEl.textContent = `${Math.round(counter.v)}%`; barEl.style.transform = `scaleX(${counter.v / 100})`; };
-gsap.to('#loaderLogo', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
 const tick = gsap.ticker.add(() => {
   const goal = Math.min(99, (loaded / tasks.length) * 100);
   counter.v += (goal - counter.v) * 0.25 + 0.5; if (counter.v > goal) counter.v = goal;
@@ -176,7 +175,7 @@ ScrollTrigger.create({ trigger: '#sets', start: 'top 60%', onEnter: () => $('#wa
 const steps = (el, n) => { el.innerHTML = Array.from({ length: n }, () => '<span><i></i></span>').join(''); return [...el.querySelectorAll('i')]; };
 const fillSteps = (bars, p) => { const n = bars.length; bars.forEach((b, k) => { b.style.transform = `scaleX(${Math.max(0, Math.min(1, p * n - k))})`; }); };
 const pair = $('#setsPair');
-pair.innerHTML = SETS.map((s, i) => `<div class="sets__card${i === 0 ? ' is-on' : ''}" data-i="${i}"><figure class="sets__a"><img src="${shot(s.slug, s.a)}" alt="" loading="${i ? 'lazy' : 'eager'}"></figure><figure class="sets__b"><img src="${shot(s.slug, s.b)}" alt="" loading="${i ? 'lazy' : 'eager'}"></figure></div>`).join('');
+pair.innerHTML = SETS.map((s, i) => `<div class="sets__card${i === 0 ? ' is-on' : ''}" data-i="${i}"><figure class="sets__a"><img src="${shot(s.slug, s.a)}" alt="" loading="lazy" fetchpriority="low"></figure><figure class="sets__b"><img src="${shot(s.slug, s.b)}" alt="" loading="lazy" fetchpriority="low"></figure></div>`).join('');
 $('#setList').innerHTML = SETS.map((s, i) => `<li data-i="${i}" class="${i ? '' : 'is-on'}"><button type="button" data-slug="${s.slug}">${bySlug(s.slug).title}</button></li>`).join('');
 $('#setList').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) openShoot(b.dataset.slug); });
 pair.addEventListener('click', () => openShoot(SETS[lastSet].slug));

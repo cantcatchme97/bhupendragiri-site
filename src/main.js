@@ -16,7 +16,11 @@ const hello = "Hi Bhupendra! Saw your website. Got a minute to talk about a shoo
 /* every tap that opens WhatsApp is logged as a lead first (works once the site is on Cloudflare; silent in previews) */
 const params = new URLSearchParams(location.search);
 const visit = { ref: document.referrer || '', utm: ['utm_source', 'utm_medium', 'utm_campaign'].map(k => params.get(k)).filter(Boolean).join(' / ') };
+const reviewing = params.has('review');
+// review mode: the client's notes tool loads only with the review link, and their taps are not logged as leads
+if (reviewing) import('./review.js').then(m => m.start());
 const logLead = (source, data = {}) => {
+  if (reviewing) return;
   try {
     const body = JSON.stringify({ source, page: location.pathname, ...visit, ...data });
     navigator.sendBeacon && navigator.sendBeacon('/api/lead', new Blob([body], { type: 'application/json' }));

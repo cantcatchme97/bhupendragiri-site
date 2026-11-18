@@ -55,10 +55,10 @@ const heroVideo = $('#heroVideo');
 // blind test: ?h=a or ?h=b forces one file with no swap
 const blind = new URLSearchParams(location.search).get('h');
 const blindLite = blind === 'a';
-const heroSrc = blind ? (small() ? 'media/films/hero-m-v4.mp4' : (blindLite ? 'media/films/hero-v3-lite.mp4' : 'media/films/hero-v3.mp4'))
-  : (small() ? 'media/films/hero-m-v4.mp4' : 'media/films/hero-v3-lite.mp4');
-const heroHD = small() || blind ? null : 'media/films/hero-v3.mp4';
-heroVideo.poster = small() ? 'media/films/hero-m-v3.webp' : 'media/films/hero-v3.webp';
+const heroSrc = blind ? (small() ? 'media/films/hero-m-v6.mp4' : (blindLite ? 'media/films/hero-v6-lite.mp4' : 'media/films/hero-v5.mp4'))
+  : (small() ? 'media/films/hero-m-v6.mp4' : 'media/films/hero-v6-lite.mp4');
+const heroHD = small() || blind ? null : 'media/films/hero-v5.mp4';
+heroVideo.poster = small() ? 'media/films/hero-m-v5.webp' : 'media/films/hero-v5.webp';
 heroVideo.src = heroSrc;
 
 /* ---------- keep the opening film playing, whatever the phone or network does ----------
@@ -191,6 +191,8 @@ const snapInside = (st, n) => {
 if (!reduce && !matchMedia('(pointer: coarse)').matches) snapInside(setsST, SETS.length);
 
 /* ---------- the shoots: an index by chapter, a glimpse on hover, the whole shoot on click ---------- */
+// keep small words with the next word, and the last two words together, so lines never end on 'a' or 'of'
+const glue = (t) => t.replace(/\b(a|an|and|the|of|in|for|on|to|at|by|with) /gi, '$1\u00a0').replace(/ (\S+)$/, '\u00a0$1');
 const chapEl = $('#chapters');
 chapEl.innerHTML = CHAPTERS.map(c => {
   const list = SHOOTS.filter(s => s.chapter === c.id);
@@ -198,8 +200,8 @@ chapEl.innerHTML = CHAPTERS.map(c => {
     <p class="chap__head"><span class="chap__no">${c.no}</span><span class="chap__name">${c.name}</span><span class="chap__count">${list.length} shoots</span></p>
     <ul class="chap__list">${list.map(s => `<li><button type="button" class="row" data-slug="${s.slug}">
       <span class="row__thumb"><img data-src="${shot(s.slug, 1, 800)}" alt=""></span>
-      <span class="row__title">${s.title}</span>
-      <span class="row__line">${s.line}</span>
+      <span class="row__title">${glue(s.title)}</span>
+      <span class="row__line">${glue(s.line)}</span>
       <span class="row__meta">${s.n} frames &middot; ${s.year}</span>
       <span class="row__open" aria-hidden="true">View</span></button></li>`).join('')}</ul></div>`;
 }).join('');

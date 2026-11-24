@@ -288,6 +288,12 @@ function goFrame(d) {
 strip.addEventListener('scroll', () => requestAnimationFrame(setCount), { passive: true });
 // a mouse wheel moves the strip sideways on desktop
 strip.addEventListener('wheel', (e) => { if (!horizontal()) return; if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { e.preventDefault(); strip.scrollLeft += e.deltaY; } }, { passive: false });
+// tap a frame: left third goes back, the rest goes forward (the 'Want this look?' link keeps working)
+strip.addEventListener('click', (e) => {
+  if (e.target.closest('a, button')) return;
+  const f = e.target.closest('.viewer__frame'); if (!f) return;
+  const r = f.getBoundingClientRect(); goFrame(e.clientX < r.left + r.width / 3 ? -1 : 1);
+});
 $('#vClose').addEventListener('click', closeShoot);
 $('#vPrev').addEventListener('click', () => goFrame(-1));
 $('#vNext').addEventListener('click', () => goFrame(1));
@@ -307,16 +313,21 @@ ScrollTrigger.create({ trigger: '#roads', start: 'top 160%', once: true, onEnter
 track.addEventListener('click', (e) => { const b = e.target.closest('.roads__item'); if (b) openShoot(b.dataset.slug); });
 // no pinning: the strip drifts on its own while it's on screen, pauses under the finger or mouse,
 // and can be swiped or dragged; the page keeps scrolling past it as normal
+// Phones: a swipe ends in a glide (momentum) that keeps scrolling after the finger lifts. Writing scrollLeft during
+// that glide stops it dead, which felt like the strip freezing. So any scroll we did not make ourselves pauses the
+// drift until the strip has been still for 2.5 s, and the drift then carries on from wherever the visitor left it.
 if (!reduce) {
-  let onScreen = false, held = false, pos = 0;
+  let onScreen = false, held = false, pos = 0, lastUser = 0, ours = false;
   new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) pos = track.scrollLeft; }, { threshold: 0.2 }).observe(track);
-  ['pointerenter', 'touchstart', 'focusin'].forEach(ev => track.addEventListener(ev, () => { held = true; }, { passive: true }));
-  ['pointerleave', 'touchend', 'focusout'].forEach(ev => track.addEventListener(ev, () => { held = false; pos = track.scrollLeft; }, { passive: true }));
+  ['pointerenter', 'touchstart', 'focusin'].forEach(ev => track.addEventListener(ev, () => { held = true; lastUser = performance.now(); }, { passive: true }));
+  ['pointerleave', 'touchend', 'touchcancel', 'focusout'].forEach(ev => track.addEventListener(ev, () => { held = false; lastUser = performance.now(); pos = track.scrollLeft; }, { passive: true }));
+  track.addEventListener('scroll', () => { if (ours) { ours = false; return; } lastUser = performance.now(); pos = track.scrollLeft; }, { passive: true });
   gsap.ticker.add((t, dt) => {
     if (!onScreen || held || viewer && !viewer.hidden) return;
+    if (performance.now() - lastUser < 2500) return;
     const max = track.scrollWidth - track.clientWidth; if (max <= 0) return;
     pos += dt * 0.045; if (pos >= max) pos = 0;
-    track.scrollLeft = pos;
+    ours = true; track.scrollLeft = pos;
   });
 }
 

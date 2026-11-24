@@ -202,10 +202,11 @@ html.has-viewer,html.has-viewer body{overflow:hidden}
   .viewer__bar{padding:16px var(--m) 10px;gap:12px}
   .viewer__line{display:none}
   .viewer__title{font-size:28px}
-  .viewer__strip{flex-direction:column;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y proximity;gap:10px;padding:0 0 20px;align-items:stretch}
-  .viewer__frame{height:auto;width:100%}
-  .viewer__frame img{width:100%;height:auto;max-width:none}
-  .viewer__nav{display:none}
+  /* phones: one frame per screen, swipe sideways or tap the left / right side; arrows stay visible */
+  .viewer__strip{gap:0;padding:0;scroll-snap-type:x mandatory;overscroll-behavior:contain;touch-action:pan-x}
+  .viewer__frame{width:100vw;height:100%;justify-content:center;scroll-snap-stop:always}
+  .viewer__frame img{width:100%;height:auto;max-width:100vw;max-height:calc(100svh - 190px);object-fit:contain}
+  .viewer__nav{width:56px;height:56px}
   .viewer__count{font-size:18px}
 }
 

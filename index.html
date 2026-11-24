@@ -98,7 +98,7 @@
       <h2 class="roads__title" id="roadsTitle">Off <span class="nb">the clock.</span></h2>
       <p class="roads__text">Kutch, Rajasthan <span class="nb">and Amritsar.</span></p>
     </div>
-    <div class="roads__track" id="roadsTrack"></div>
+    <div class="roads__track" id="roadsTrack" data-lenis-prevent-touch></div>
   </section>
 
   <!-- Frame your shoot: a camera screen that writes the WhatsApp message -->
@@ -172,7 +172,9 @@
   </div>
 </footer>
 
-<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden>
+<!-- data-lenis-prevent: while a shoot is open the page's smooth scroll is paused, and paused Lenis blocks every
+     touch swipe unless the element opts out. Without this the frames could not be swiped on phones. -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" data-lenis-prevent hidden>
   <div class="viewer__bar">
     <p class="viewer__meta"><span class="viewer__no" id="vNo"></span><span id="vTitle" class="viewer__title"></span><span class="viewer__line" id="vLine"></span></p>
     <p class="viewer__count" id="vCount"></p>
